@@ -6,11 +6,24 @@ The main files of this folder are **baxter_left_arm_ikfast_solver.cpp** and **ba
 
 In order to create executables out of **baxter_side_arm_ikfast_solver.cpp** perform the following
 
-'''
+```
 $ g++ -lstdc++ -o  baxter_side_ik baxter_side_arm_ikfast_solver.cpp -llapack
-'''
-This will generate an executable named **baxter_side_ik**
+```
 
+This will generate an executable named **baxter_side_ik**. Perfor this for both the arms. These file will be capable of solving inverse kinematics for both the arms. However if you look inside the **baxter_left_arm_ikfast_solver.cpp** or **baxter_right_arm_ikfast_solver.cpp**, you will find that apart from **compute\_IK** function there is another function named **compute\_FK** to solve forward kinematics. If you want to use both of these two functions, compile with **ikfastdemo.cpp** file as following,
+
+```
+Step 1 : change these in ikfastdemo.cpp file
+----------------------------------------------
+#define IK_VERSION 61
+#include "baxter_right_arm_ikfast_solver.cpp"
+```
+Next compile the modified file as following,
+```
+Step 2 : complie modified ikfastdemo.cpp file
+-----------------------------------------------
+$ g++ ikfastdemo.cpp -lstdc++ -llapack -o compute -lrt
+```
 
 ## go_to_position package
 
