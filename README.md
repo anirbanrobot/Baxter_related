@@ -42,7 +42,7 @@ $ rosrun go_to_position go_to_angle.py left 0.5 -0.2 0.4 0.1 0.5 0.7 1.2 0.1
 This would take the arm to desired joint configuration.
 
 ### Example 2: providing 1 input argument
-This is a special case of **Example 1** that takes in only 1 (<side>) input argument instead of 8. The general command line argument to run this node is as following,
+This is a special case of **Example 1** that takes in only 1 (`<side>`) input argument instead of 8. The general command line argument to run this node is as following,
 
 ```
 $ rosrun go_to_position go_to_angle.py <side>
