@@ -29,8 +29,30 @@ I will now show you how to compute FK and IK of Baxter robot using the executabl
 ```
 $ ./compute fk 0.5 0.5 0.5 0.4 0.5 0.4 0.5
 ```
+The output should look like as following,
+```
+Found fk solution for end frame: 
+
+  Translation:  x: 0.555013  y: 0.554330  z: -0.445436   
+
+     Rotation     -0.748117   0.654960   0.106527   
+       Matrix:    0.568134   0.549273   0.612799   
+                  0.342846   0.518968   -0.783026   
+
+ Euler angles: 
+       Yaw:   3.006377    (1st: rotation around vertical blue Z-axis in ROS Rviz) 
+       Pitch: 0.802276   
+       Roll:  0.659598   
+
+  Quaternion:  -0.067323   0.348438   0.877556   0.322420   
+               -0.067323 + 0.348438i + 0.877556j + 0.322420k   (alternate convention) 
+```
 ```
 $ ./baxter_right_ik -0.748117 0.654960 0.106527 0.555013 0.568134 0.549273 0.612799 0.554330 0.342846 0.518968 -0.783026 -0.445436 0.5
+```
+The output look like as following,
+```
+IK solution found
 ```
 
 
