@@ -9,11 +9,11 @@ In order to create executables out of **baxter_left_arm_ikfast_solver.cpp** and 
 
 ## go_to_position package
 
-This package is created to move Baxter joints to desired rotations. This package can be downloaded from github repository, http://www.github.com. There is one basic node that can implement what stated above. The node name is **go_to_angle.py**. This node takes 8 input arguments, one for arm side and seven joint angles. If only side is provided as input argument, then this node get the arm back to a predefined joint configuration, called *home position*. Below we showed installation protocol of this package into ROS workspace (**ros_ws**) and including it with the workspace.
+This package is created to move Baxter joints to desired rotations. This package can be downloaded from github repository, https://github.com/anirbanrobot/Baxter_related. There is one basic node that can implement what stated above. The node name is **go_to_angle.py**. This node takes 8 input arguments, one for arm side and seven joint angles. If only side is provided as input argument, then this node get the arm back to a predefined joint configuration, called *home position*. Below we showed installation protocol of this package into ROS workspace (**ros_ws**) and including it with the workspace.
 
 ```
 $ cd ~/ros_ws/src
-$ git clone http://www.github.com
+$ git clone https://github.com/anirbanrobot/Baxter_related
 $ cd ~/ros_ws
 $ catkin_make
 $ source devel/setup.bash
