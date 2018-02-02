@@ -4,7 +4,12 @@ This repository is created to keep all the customed Baxter robot packages in one
 ## Baxter_IK_Fast
 The main files of this folder are **baxter_left_arm_ikfast_solver.cpp** and **baxter_right_arm_ikfast_solver.cpp** which can be used to find inverse kinematics solutions of left and right arm of baxter robot respectively. These two **.cpp** files along with the other **.urdf** or **.dae** files are created following http://sdk.rethinkrobotics.com/wiki/Custom_IKFast_for_your_Baxter. There are two other important **.cpp** files that are present in the package, namely **ikfast.cpp** and **ikfastdemo.cpp**. These two files need  to be preset in the same directory as the **baxter_left_arm_ikfast_solver.cpp** and **baxter_right_arm_ikfast_solver.cpp** files in order to compile successfully. This is also true if one wants to run **baxter_side_arm_ikfast_solver.cpp** as a standalone IK solver. Just to inform that **ikfast.cpp** can be obtained from **OpenRAVE**'s **Python** folder. The file **ikfastdemo.cpp** can be obtained from https://github.com/davetcoleman/clam_rosbuild/tree/master/clam_ik/src . <br>
 
-In order to create executables out of **baxter_left_arm_ikfast_solver.cpp** and **baxter_right_arm_ikfast_solver.cpp** perform the following
+In order to create executables out of **baxter_side_arm_ikfast_solver.cpp** perform the following
+
+'''
+$ g++ -lstdc++ -o  baxter_side_ik baxter_side_arm_ikfast_solver.cpp -llapack
+'''
+This will generate an executable named **baxter_side_ik**
 
 
 ## go_to_position package
