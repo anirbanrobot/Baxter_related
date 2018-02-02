@@ -47,7 +47,7 @@ Found fk solution for end frame:
   Quaternion:  -0.067323   0.348438   0.877556   0.322420   
                -0.067323 + 0.348438i + 0.877556j + 0.322420k   (alternate convention) 
 ```
-Once we have computed FK, we can solve IK as following (notice the format of input argumet)
+Once we have computed FK, we can solve IK as following (notice the format of input arguments)
 ```
 $ ./baxter_right_ik -0.748117 0.654960 0.106527 0.555013 0.568134 0.549273 0.612799 0.554330 0.342846 0.518968 -0.783026 -0.445436 0.5
 ```
