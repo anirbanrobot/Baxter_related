@@ -1,0 +1,3 @@
+$ g++ -DNDEBUG -Wall -Wstrict-prototypes -fPIC -I/home/nobug-ros/anaconda3/include/python3.6m -c baxter_left_ik_solver_wrap.cpp -o ikModule.o -llapack
+
+$ g++ -shared ikModule.o -o ikModule.so -llapack

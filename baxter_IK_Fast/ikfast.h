@@ -338,3 +338,4 @@ IKFAST_API const char* GetKinematicsHash();
 #endif
 
 #endif // IKFAST_HAS_LIBRARY
+

@@ -19,6 +19,7 @@
 ///     gcc -fPIC -lstdc++ -DIKFAST_NO_MAIN -DIKFAST_CLIBRARY -shared -Wl,-soname,libik.so -o libik.so ik.cpp
 #define IKFAST_HAS_LIBRARY
 #include "ikfast.h" // found inside share/openrave-X.Y/python/ikfast.h
+#include <Python.h>
 using namespace ikfast;
 
 // check if the included ikfast version matches what this file was compiled with
@@ -89440,6 +89441,80 @@ IKFAST_API const char* GetIkFastVersion() { return "0x10000049"; }
 #ifdef IKFAST_NAMESPACE
 using namespace IKFAST_NAMESPACE;
 #endif
+
+/* This function call ComputeIk and returns all solutions */
+int compIKs(IkReal* eerot, IkReal* eetrans, std::vector<IkReal>* vfree, IkSolutionList<IkReal>* solutions, std::vector<double>* solVec, bool printSol) {
+//    IkSolutionList<IkReal> solutions;
+    bool bSuccess = ComputeIk(eetrans, eerot, vfree->size() > 0 ? &vfree->front() : NULL, *solutions);
+
+    if( !bSuccess ) {
+        fprintf(stderr,"Failed to get ik solution\n");
+        return -1;
+    }
+    
+    printf("Found %d ik solutions:\n", (int)solutions->GetNumSolutions());
+    
+    if (printSol) {
+        printf("printSol is made true so solution will be printed\n");
+        std::vector<IkReal> solvalues(GetNumJoints());
+        for(std::size_t i = 0; i < solutions->GetNumSolutions(); ++i) {
+            const IkSolutionBase<IkReal>& sol = solutions->GetSolution(i);
+            printf("sol%d (free=%d): ", (int)i, (int)sol.GetFree().size());
+            std::vector<IkReal> vsolfree(sol.GetFree().size());
+            sol.GetSolution(&solvalues[0],vsolfree.size()>0?&vsolfree[0]:NULL);
+            for( std::size_t j = 0; j < solvalues.size(); ++j) {
+                printf("%.15f, ", solvalues[j]);
+                solVec->push_back(solvalues[j]);
+            }
+            printf("\n");
+        }
+    }
+    return 0;
+}
+
+extern "C"{
+    // Function wrapping Fibonacci function in C++
+    static PyObject* compIKs_wrap(PyObject* /*self*/, PyObject* args)
+    {
+        int argval;
+        if (!PyArg_ParseTuple(args, "i", &argval)) {
+            printf("Error parsing input argument(s)\n");
+            return NULL;
+        }
+        IkSolutionList<IkReal> solutions;
+        std::vector<IkReal> vfree(GetNumFreeParameters());
+        IkReal eerot[9],eetrans[3];
+        bool printSol = true;
+        /*Create a vector to hold all solutions*/
+        std::vector<double> solVec;
+
+        eerot[0] = -0.748117; eerot[1] = 0.654960; eerot[2] = 0.106527; eetrans[0] = 0.555013;
+        eerot[3] = 0.568134; eerot[4] = 0.549273; eerot[5] = 0.612799; eetrans[1] = 0.554330;
+        eerot[6] = 0.342846; eerot[7] = 0.518968; eerot[8] =  -0.783026; eetrans[2] = -0.445436;
+        for(std::size_t i = 0; i < vfree.size(); ++i)
+            vfree[i] = 0.5;
+        compIKs(eerot, eetrans, &vfree, &solutions, &solVec, printSol);
+        return Py_BuildValue("i", 156);        
+    }
+   // An array specifying exactly which methods are wrappers
+   static PyMethodDef CppMethods[] = {
+	{"compIKs", compIKs_wrap, METH_VARARGS, "Computes all IKs of Baxter Left arm"},
+    {NULL, NULL, 0, NULL}
+   };
+  // Define module information
+  static struct PyModuleDef ikModule = {
+	PyModuleDef_HEAD_INIT,
+    "ikModule",
+    "inverse_kinematics Module",
+    -1,
+    CppMethods
+  };
+  // Init function for module
+  PyMODINIT_FUNC PyInit_MyModule(void) {
+  	return PyModule_Create(&ikModule);
+  }
+}
+
 int main(int argc, char** argv)
 {
     if( argc != 12+GetNumFreeParameters()+1 ) {
@@ -89453,29 +89528,18 @@ int main(int argc, char** argv)
     IkSolutionList<IkReal> solutions;
     std::vector<IkReal> vfree(GetNumFreeParameters());
     IkReal eerot[9],eetrans[3];
+    bool printSol = true;
+    /*Create a vector to hold all solutions*/
+    std::vector<double> solVec;
+    
     eerot[0] = atof(argv[1]); eerot[1] = atof(argv[2]); eerot[2] = atof(argv[3]); eetrans[0] = atof(argv[4]);
     eerot[3] = atof(argv[5]); eerot[4] = atof(argv[6]); eerot[5] = atof(argv[7]); eetrans[1] = atof(argv[8]);
     eerot[6] = atof(argv[9]); eerot[7] = atof(argv[10]); eerot[8] = atof(argv[11]); eetrans[2] = atof(argv[12]);
     for(std::size_t i = 0; i < vfree.size(); ++i)
         vfree[i] = atof(argv[13+i]);
-    bool bSuccess = ComputeIk(eetrans, eerot, vfree.size() > 0 ? &vfree[0] : NULL, solutions);
-
-    if( !bSuccess ) {
-        fprintf(stderr,"Failed to get ik solution\n");
-        return -1;
-    }
-
-    printf("Found %d ik solutions:\n", (int)solutions.GetNumSolutions());
-    std::vector<IkReal> solvalues(GetNumJoints());
-    for(std::size_t i = 0; i < solutions.GetNumSolutions(); ++i) {
-        const IkSolutionBase<IkReal>& sol = solutions.GetSolution(i);
-        printf("sol%d (free=%d): ", (int)i, (int)sol.GetFree().size());
-        std::vector<IkReal> vsolfree(sol.GetFree().size());
-        sol.GetSolution(&solvalues[0],vsolfree.size()>0?&vsolfree[0]:NULL);
-        for( std::size_t j = 0; j < solvalues.size(); ++j)
-            printf("%.15f, ", solvalues[j]);
-        printf("\n");
-    }
+    
+    compIKs(eerot, eetrans, &vfree, &solutions, &solVec, printSol);
+    
     return 0;
 }
 
