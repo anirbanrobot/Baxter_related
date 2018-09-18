@@ -19,7 +19,7 @@
 ///     gcc -fPIC -lstdc++ -DIKFAST_NO_MAIN -DIKFAST_CLIBRARY -shared -Wl,-soname,libik.so -o libik.so ik.cpp
 #define IKFAST_HAS_LIBRARY
 #include "ikfast.h" // found inside share/openrave-X.Y/python/ikfast.h
-#include <Python.h>
+#include </home/nobug-ros/anaconda3/include/python3.6m/Python.h>
 using namespace ikfast;
 
 // check if the included ikfast version matches what this file was compiled with

@@ -7,13 +7,13 @@ tol = 1e-3;
 
 %% Control parameters of the code
 %npts = 50;               % number of discrete theta1
-c_ang_res = tol*1e-2;          % resolution of phi angle
-th1_res = .05;                % resolution of theta1 angle
+c_ang_res = tol*1e-2;     % resolution of phi angle
+th1_res = 0.01;           % resolution of theta1 angle
 
 %% Desired configuration
-gst_d = load('ee_configuration3.txt');     % desired tool frame configuration
+gst_d = load('ee_configuration4.txt');     % desired tool frame configuration
 
-% p = [0.675, 0.225, 0.120];  % IKFast fails
+% p = [0.675, 0.225, 0.130];  % IKFast fails
 % R = quat2rotm([0, 0, 1, 0]);
 % gst_d = [R p'; 0 0 0 1];
 
@@ -25,13 +25,13 @@ fclose(fileID);
 %% Slove forward kinematics
 % DH parameters
 ak = [0.069 0 0.069 0 0.010 0 0];
-dk = [0.27035 0 0.36435 0 0.37429 0 0.254525];
+dk = [0.27035 0 0.36435 0 0.37429 0 0.254525+0.150];  % add 0.15 to match left_gripper transform
 alp = pi*[-1/2 1/2 -1/2 1/2 -1/2 1/2 0];
 
 % base transformations
 bax_base = [0.7071   -0.7071         0    0.0640;
             0.7071    0.7071         0    0.2590;
-                 0         0    1.0000    0.1196;
+                 0         0    1.0000    0.1296;
                  0         0         0    1.0000];
 
 % joint limits
@@ -66,15 +66,18 @@ if th1_max > jl_max(1)
     th1_max = jl_max(1);
 end
 
-fprintf('Solution will be found for %6.4f < theta_1 < %6.4f\n\n', th1_min, th1_max)
+fprintf('Solution will be found for %6.4f < theta_1 < %6.4f\n\n', th1_min, th1_max);
 fprintf('Starting IK routine for the above range for theta1 . . . .\n\n');
 fprintf('------------------------------------------------------------\n');
 
+% th1_min = -0.45; th1_max = 1.0009;
+% th1_min = -1.15; th1_max = -0.7;
+% th1_min = -1.6; th1_max = -0.085;   % counter IKFast
 th1_range = linspace(th1_min, th1_max, ceil((th1_max - th1_min)/th1_res));
-%th1_range = 0.8;
 
 tic;
 for i = 1 : length(th1_range)
+%    comp_angle(tol, -1.5799, c_ang_res, gst_d, ak, dk, alp, bax_base, jl_min, jl_max, wrist_gbl, L1, L2, filename);
    comp_angle(tol, th1_range(i), c_ang_res, gst_d, ak, dk, alp, bax_base, jl_min, jl_max, wrist_gbl, L1, L2, filename);
 end
 toc;
