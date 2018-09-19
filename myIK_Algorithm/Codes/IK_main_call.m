@@ -2,6 +2,9 @@ clc
 clear
 close all
 
+%% Add function files path
+addpath supported_files
+
 %% Solution tolerance
 tol = 1e-3;
 
@@ -11,14 +14,14 @@ c_ang_res = tol*1e-2;     % resolution of phi angle
 th1_res = 0.01;           % resolution of theta1 angle
 
 %% Desired configuration
-gst_d = load('ee_configuration4.txt');     % desired tool frame configuration
+gst_d = load('read_write_files/ee_configuration4.txt');     % desired tool frame configuration
 
 % p = [0.675, 0.225, 0.130];  % IKFast fails
 % R = quat2rotm([0, 0, 1, 0]);
 % gst_d = [R p'; 0 0 0 1];
 
 %% Opening a file to write joint solutions
-filename = sprintf('%s_%d.txt','IKsol',30);
+filename = sprintf('read_write_files/%s_%d.txt','IKsol',30);
 fileID = fopen(filename, 'w');
 fclose(fileID);
 
